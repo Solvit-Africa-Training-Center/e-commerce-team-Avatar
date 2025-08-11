@@ -1,0 +1,3 @@
+### we are a team of developers working on an e-commerce platform called Avatar. Our goal is to create a seamless shopping experience for users, with a focus on performance and scalability.
+# Avatar E-commerce Platform
+This is the repository for the Avatar e-commerce platform, a project developed by the e-commerce team at Solvit. The platform aims to provide a seamless shopping experience with a focus on performance and scalability.
