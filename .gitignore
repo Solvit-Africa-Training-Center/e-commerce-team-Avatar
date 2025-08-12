@@ -3,5 +3,8 @@
 uv.lock
 uv.cache
 pyproject.toml
-env
+/__pycache__/
+*.pyc
+env/
+
 .env
