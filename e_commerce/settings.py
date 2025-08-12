@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
      'rest_framework',
     'corsheaders',
+    'cart',
 ]
 
 REST_FRAMEWORK = {
