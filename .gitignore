@@ -8,3 +8,5 @@ pyproject.toml
 env/
 
 .env
+__pycache__/
+*.pyc
