@@ -1,18 +1,11 @@
 from django.db import models
 from django.conf import settings
 from decimal import Decimal
+from product.models import Product
 
-class Product(models.Model):
-    name = models.CharField(max_length=150)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
-    is_available = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self) -> str:
-        return str(self.name)
+
+
 
 
 
@@ -31,7 +24,7 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey("Product", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     vendor_id = models.IntegerField()
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)

@@ -140,6 +140,9 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API documentation for the e-commerce platform',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+     'PREPROCESSING_HOOKS': [
+        'e_commerce.schema_hooks.group_by_prefix'
+    ],
     # OTHER SETTINGS
 }
 

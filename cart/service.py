@@ -2,8 +2,8 @@
 from decimal import Decimal
 from django.conf import settings
 from .models import Cart, CartItem
-from .models import Product
-from .serializers import ProductSerializer
+from product.models import Product
+from product.serializers import ProductSerializer
 
 class CartService:
     def __init__(self, request):
@@ -25,7 +25,7 @@ class CartService:
 
     def add(self, product, quantity=1, override_quantity=False):
         product_id = str(product.id)
-        vendor_id = product.vendor_id
+        vendor_id = product.seller.id
         price = Decimal(product.price)
 
         if self.request.user.is_authenticated:

@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -8,34 +9,12 @@ from .serializers import ProductSerializer, CartActionSerializer
 from .models import Product
 from .service import CartService
 
-
-class ProductAPI(APIView):
-    """
-    API to handle product listing and creation
-    """
-    serializer_class = ProductSerializer
-
-    def get(self, request, format=None):
-        qs = Product.objects.all()
-        return Response(
-            {"data": self.serializer_class(qs, many=True).data},
-            status=status.HTTP_200_OK
-        )
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED
-        )
-
-
+@extend_schema(tags=["Cart"])
 class CartAPI(APIView):
     """
     API to handle cart operations for guest and logged-in users
     """
+    permission_classes = [AllowAny]
 
     @extend_schema(
         summary="Retrieve current cart",
@@ -66,7 +45,8 @@ class CartAPI(APIView):
                     ),
                 ]
             )
-        }
+        },
+       
     )
     def get(self, request, format=None):
         cart = CartService(request)

@@ -1,10 +1,5 @@
 from rest_framework import serializers
-from .models import Product
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = "__all__"
+from product.serializers import ProductSerializer
 
 class CartActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=["add", "remove", "clear"])

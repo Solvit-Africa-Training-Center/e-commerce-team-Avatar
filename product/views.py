@@ -9,32 +9,36 @@ from .serializers import (
     CategorySerializer, BrandSerializer, AttributeSerializer,
     AttributeValueSerializer, ProductSerializer, ProductImageSerializer
 )
+from drf_spectacular.utils import extend_schema
 
-
+@extend_schema(tags=["Categories"])
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [permissions.AllowAny]
 
-
+@extend_schema(tags=["Brands"])
 class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
     permission_classes = [permissions.AllowAny]
 
 
+@extend_schema(tags=["Attributes"])
 class AttributeViewSet(viewsets.ModelViewSet):
     queryset = Attribute.objects.all()
     serializer_class = AttributeSerializer
     permission_classes = [permissions.AllowAny]
 
 
+@extend_schema(tags=["Attribute Values"])
 class AttributeValueViewSet(viewsets.ModelViewSet):
     queryset = AttributeValue.objects.all()
     serializer_class = AttributeValueSerializer
     permission_classes = [permissions.AllowAny]
 
 
+@extend_schema(tags=["Products"])
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().select_related('category', 'brand', 'seller').prefetch_related('attributes', 'images')
     serializer_class = ProductSerializer
@@ -47,7 +51,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(seller=self.request.user)
 
-
+@extend_schema(tags=["Product Images"])
 class ProductImageViewSet(viewsets.ModelViewSet):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
