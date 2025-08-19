@@ -1,21 +1,33 @@
-# products/views.py
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import (
-    Category, Brand, Attribute, AttributeValue,
-    Product, ProductImage
-)
-from .serializers import (
-    CategorySerializer, BrandSerializer, AttributeSerializer,
-    AttributeValueSerializer, ProductSerializer, ProductImageSerializer
-)
+from .models import *
+from .serializers import *
 from drf_spectacular.utils import extend_schema
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for Products.
+    - Supports filtering by category, brand, seller, and name.
+    """
+    queryset = Product.objects.all().select_related("category", "brand", "seller")
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["category", "brand", "seller"]
+    search_fields = ["name", "description"]
+
+
+class ProductImageViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for Product Images.
+    - Allows CRUD on product images.
+    """
+    queryset = ProductImage.objects.all().select_related("product")
+    serializer_class = ProductImageSerializer
 
 @extend_schema(tags=["Categories"])
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.AllowAny]
 
 @extend_schema(tags=["Brands"])
 class BrandViewSet(viewsets.ModelViewSet):

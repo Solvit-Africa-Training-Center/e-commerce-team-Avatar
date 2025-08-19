@@ -41,6 +41,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     qty = models.PositiveIntegerField()
     attributes = models.ManyToManyField(AttributeValue, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -50,10 +51,24 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    
+    # Optional descriptive name for image
     name = models.CharField(max_length=255, blank=True)
     alternative_text = models.CharField(max_length=255, blank=True)
-    url = models.URLField()
+    
+    # ✅ Replaced URLField with ImageField for media uploads
+    # - `upload_to="products/"` means images will be saved under MEDIA_ROOT/products/
+    # - You can also organize by product ID like "products/%Y/%m/%d/"
+    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    
+    # Keep URL option if you still want remote/external images
+    url = models.URLField(blank=True, null=True)
+
     is_primary = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.product.name} - {self.name or 'Image'}"
+
+    class Meta:
+        verbose_name = "Product Image"
+        verbose_name_plural = "Product Images"

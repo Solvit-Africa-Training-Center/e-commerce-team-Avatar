@@ -1,87 +1,47 @@
-# products/serializers.py
 from rest_framework import serializers
-from .models import (
-    Category, Brand, Attribute, AttributeValue,
-    Product, ProductImage
-)
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-class BrandSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Brand
-        fields = '__all__'
-
-
-class AttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Attribute
-        fields = '__all__'
-
-
-class AttributeValueSerializer(serializers.ModelSerializer):
-    attribute = AttributeSerializer(read_only=True)
-    attribute_id = serializers.PrimaryKeyRelatedField(
-        queryset=Attribute.objects.all(),
-        source='attribute',
-        write_only=True
-    )
-
-    class Meta:
-        model = AttributeValue
-        fields = ['id', 'value', 'attribute', 'attribute_id']
+from .models import Product, ProductImage, Category, Brand
 
 
 class ProductImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for handling product images.
+    - Returns absolute URL for easy frontend integration.
+    """
+    image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImage
-        fields = '__all__'
+        fields = ["id", "name", "alternative_text", "image", "image_url", "is_primary"]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    category_id = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.all(),
-        source='category',
-        write_only=True
-    )
-
-    brand = BrandSerializer(read_only=True)
-    brand_id = serializers.PrimaryKeyRelatedField(
-        queryset=Brand.objects.all(),
-        source='brand',
-        write_only=True,
-        allow_null=True
-    )
-
-    seller = serializers.StringRelatedField(read_only=True)
-
-    attributes = AttributeValueSerializer(many=True, read_only=True)
-    attribute_ids = serializers.PrimaryKeyRelatedField(
-        queryset=AttributeValue.objects.all(),
-        many=True,
-        source='attributes',
-        write_only=True
-    )
-
+    """
+    Serializer for Products.
+    - Includes nested images.
+    """
     images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'description',
-            'category', 'category_id',
-            'brand', 'brand_id',
-            'seller', 'price', 'qty',
-            'attributes', 'attribute_ids',
-            'images', 'created_at', 'updated_at'
+            "id", "seller", "category", "brand", "name", "slug",
+            "description", "price", "created_at", "updated_at", "images"
         ]
 
-    def create(self, validated_data):
-        validated_data['seller'] = self.context['request'].user
-        return super().create(validated_data)
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "name", "slug"]
+
+
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = ["id", "name", "slug"]

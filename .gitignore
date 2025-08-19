@@ -6,7 +6,6 @@ pyproject.toml
 /__pycache__/
 *.pyc
 env/
-db.sqlite3
 
 .env
 __pycache__/
@@ -14,10 +13,10 @@ __pycache__/
 
 *.sqlite3
 *.db
-db.sqlite3
 
 
 
 */migrations/*
+!*/migrations/__init__.py
 !*/migrations/__init__.py
 
