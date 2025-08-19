@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from .models import (
     Category, Brand, Attribute, AttributeValue,
-    Product, ProductImage
+    Product, ProductImage, Wishlist
 )
 
 
@@ -85,3 +85,12 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['seller'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    # user = UserSerializer(read_only=True) #updated when user model is already there
+    product = ProductSerializer(read_only=True)
+    class Meta:
+        model = Wishlist 
+        fields = ["id", "user", "product", "created"]
+
