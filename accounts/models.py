@@ -25,7 +25,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    
     full_name = models.CharField(max_length=255)
+    role = models.CharField(max_length=50, choices=[
+        ('client', 'Client'),
+        ('seller', 'Seller'),
+        ('admin', 'Admin'),
+    ], default='client')
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
