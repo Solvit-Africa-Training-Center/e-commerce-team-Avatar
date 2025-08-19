@@ -8,3 +8,13 @@ pyproject.toml
 env/
 
 .env
+__pycache__/
+*.pyc
+
+*.sqlite3
+*.db
+
+
+
+*/migrations/*
+!*/migrations/__init__.py
