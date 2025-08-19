@@ -2,6 +2,8 @@
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+
+
 from django.urls import path,include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
@@ -12,6 +14,7 @@ urlpatterns = [
     path('api/', include('cart.urls')),
     path('api/', include('product.urls')),
     path('api/', include('payments.urls')),
+    path('api/', include('accounts.urls')),
 ]
 
 if settings.DEBUG:
