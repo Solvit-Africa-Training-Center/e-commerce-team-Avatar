@@ -13,3 +13,9 @@ __pycache__/
 
 *.sqlite3
 *.db
+
+
+
+*/migrations/*
+!*/migrations/__init__.py
+
