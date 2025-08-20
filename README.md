@@ -60,7 +60,7 @@ Create a `.env` file in the root directory and add the following variables:
 SECRET_KEY=your_secret_key
 DEBUG=True  
 ALLOWED_HOSTS=localhost,
-
+```
 
 
 ## 👥 Contributors
