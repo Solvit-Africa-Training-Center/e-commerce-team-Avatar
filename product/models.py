@@ -62,7 +62,7 @@ class ProductImage(models.Model):
 
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="wishlists")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlist")
     created = models.DateTimeField(auto_now_add=True) 
 

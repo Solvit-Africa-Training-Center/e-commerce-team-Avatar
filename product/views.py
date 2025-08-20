@@ -58,8 +58,14 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
 
-@extend_schema(tags=["Wishlists"])
+@extend_schema(tags=["Wishlists"],
+             request=WishlistSerializer,
+             responses={200: WishlistSerializer(many=True)}
+             )
 class WishlistViewSet(viewsets.ModelViewSet):
     queryset = Wishlist.objects.all()
     serializer_class = WishlistSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

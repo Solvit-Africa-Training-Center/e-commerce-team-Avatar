@@ -4,6 +4,7 @@ from .models import (
     Category, Brand, Attribute, AttributeValue,
     Product, ProductImage, Wishlist
 )
+from accounts.serializers import RegisterSerializer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -88,8 +89,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class WishlistSerializer(serializers.ModelSerializer):
-    # user = UserSerializer(read_only=True) #updated when user model is already there
-    product = ProductSerializer(read_only=True)
+    user = RegisterSerializer(read_only=True)  # updated when user model is already there
+    product = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all()
+    )
     class Meta:
         model = Wishlist 
         fields = ["id", "user", "product", "created"]
