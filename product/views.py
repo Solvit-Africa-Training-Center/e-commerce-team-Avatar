@@ -3,8 +3,16 @@ from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import *
-from .serializers import *
+from .models import (
+    Category, Brand, Attribute, AttributeValue,
+    Product, ProductImage, Wishlist
+)
+from .serializers import (
+    CategorySerializer, BrandSerializer, AttributeSerializer,
+    AttributeValueSerializer, ProductSerializer, ProductImageSerializer, WishlistSerializer
+)
+from .filters import ProductFilter
+from .permissions import IsSellerOrReadOnly
 from drf_spectacular.utils import extend_schema
 
 class ProductViewSet(viewsets.ModelViewSet):
@@ -93,3 +101,16 @@ class ProductImageViewSet(viewsets.ModelViewSet):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
     permission_classes = [permissions.AllowAny]
+
+
+@extend_schema(tags=["Wishlists"],
+             request=WishlistSerializer,
+             responses={200: WishlistSerializer(many=True)}
+             )
+class WishlistViewSet(viewsets.ModelViewSet):
+    queryset = Wishlist.objects.all()
+    serializer_class = WishlistSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

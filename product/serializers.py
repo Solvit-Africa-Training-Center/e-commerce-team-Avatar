@@ -2,8 +2,9 @@
 from rest_framework import serializers
 from .models import (
     Category, Brand, Attribute, AttributeValue,
-    Product, ProductImage
+    Product, ProductImage, Wishlist
 )
+from accounts.serializers import RegisterSerializer
 
 # --- Simple serializers ---
 class CategorySerializer(serializers.ModelSerializer):
@@ -105,3 +106,14 @@ class ProductSerializer(serializers.ModelSerializer):
         if request and request.user and request.user.is_authenticated:
             validated_data["seller"] = request.user
         return super().create(validated_data)
+
+
+class WishlistSerializer(serializers.ModelSerializer):
+    user = RegisterSerializer(read_only=True)  # updated when user model is already there
+    product = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all()
+    )
+    class Meta:
+        model = Wishlist 
+        fields = ["id", "user", "product", "created"]
+

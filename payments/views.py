@@ -9,9 +9,11 @@ import stripe
 from .models import Order, OrderItem
 from product.models import Product
 from cart.service import CartService  
+from drf_spectacular.utils import extend_schema
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+@extend_schema(tags=["Payments"])
 class CreatePaymentAPIView(APIView):
     """
     Create a Stripe Checkout Session for multiple vendors.
