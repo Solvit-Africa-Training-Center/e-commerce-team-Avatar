@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth import authenticate
 from .models import User, SellerProfile, Location
 
 # -------------------------------
@@ -88,3 +89,17 @@ class LocationSerializer(serializers.ModelSerializer):
         model = Location
         fields = ["id", "user", "country", "state", "city", "street_address"]
         read_only_fields = ["id", "user"]
+
+
+# -------------------------------
+# User Login Serializer (from upstream)
+# -------------------------------
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials!")
